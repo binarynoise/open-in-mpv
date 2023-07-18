@@ -1,6 +1,6 @@
 {
   "name": "__MSG_extensionName__",
-  "short_name": "__MSG_appShortName__",
+  "short_name": "__MSG_extensionShortName__",
   "description": "__MSG_extensionDescription__",
   "version": "1.0.0",
   "manifest_version": 3,
@@ -15,7 +15,8 @@
   "background": {
     "scripts": [
       "background.js"
-    ]
+    ],
+    "x-chrome-service_worker": "background.js"
   },
   "action": {
     "default_icon": {
@@ -27,7 +28,7 @@
     "default_title": "Open in mpv"
   },
   "permissions": [
-    "menus",
+    "contextMenus",
     "activeTab",
     "downloads",
     "webNavigation"

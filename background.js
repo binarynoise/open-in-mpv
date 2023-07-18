@@ -1,4 +1,11 @@
 "use strict";
+let browser;
+
+let isChrome = false; // TODO
+
+if (browser === undefined) {
+    browser = chrome;
+}
 
 function ff2mpv(url) {
     const mpvUrl = `mpv://${url}`;
@@ -13,25 +20,41 @@ function ff2mpv(url) {
     );
 }
 
-browser.menus.create({
+browser.contextMenus.create({
     id: "ff2mpv",
     title: browser.i18n.getMessage("extensionName"),
-    contexts: [
-        "action",
-        "audio",
-        "frame",
-        // "image",
-        "link",
-        // "page_action",
-        // "page",
-        "selection",
-        "tab",
-        "tools_menu",
-        "video",
-    ],
+    contexts: isChrome
+        ? [
+              // chrome: action, all, audio, browser_action, editable, frame, image, launcher, link, page, page_action, selection, video
+              "action",
+              "audio",
+              "frame",
+              // "image",
+              "link",
+              "page_action",
+              // "page",
+              "selection",
+              //-"tab",
+              //-"tools_menu",
+              "video",
+          ]
+        : [
+              // firefox: "all", "page", "frame", "selection", "link", "editable", "password", "image", "video", "audio", "launcher", "bookmark", "tab", "tools_menu"
+              "action",
+              "audio",
+              "frame",
+              // "image",
+              "link",
+              // "page_action",
+              // "page",
+              "selection",
+              "tab",
+              "tools_menu",
+              "video",
+          ],
 });
 
-browser.menus.onClicked.addListener((info, tab) => {
+browser.contextMenus.onClicked.addListener((info, tab) => {
     switch (info.menuItemId) {
         case "ff2mpv":
             /* These should be mutually exclusive, but,
@@ -90,7 +113,7 @@ chrome.webNavigation.onReferenceFragmentUpdated.addListener((details) => {
 }, filter);
 */
 
-chrome.webNavigation.onErrorOccurred.addListener((details) => {
+browser.webNavigation.onErrorOccurred.addListener((details) => {
     // Error code 2152398865 -> mpv
     // Error code 2152398866 -> error
 
