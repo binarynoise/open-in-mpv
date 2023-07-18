@@ -29,7 +29,8 @@
   "permissions": [
     "menus",
     "activeTab",
-    "downloads"
+    "downloads",
+    "webNavigation"
   ],
   "web_accessible_resources": [
     {

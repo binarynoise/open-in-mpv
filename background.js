@@ -2,40 +2,10 @@
 
 function ff2mpv(url) {
     const mpvUrl = `mpv://${url}`;
-    console.log("navigating to:", mpvUrl);
 
     browser.tabs.update({ url: mpvUrl }).then(
         (tab) => {
-            if (tab.url == mpvUrl) {
-                console.log("updated " + mpvUrl);
-            } else {
-                console.log("not updated " + mpvUrl);
-
-                browser.downloads.download({ url: browser.runtime.getURL("mpv-scheme-handler.desktop.txt") }).then(
-                    (id) => {
-                        console.log(`Started downloading: ${id}`);
-                        const listener = (delta) => {
-                            if (delta.id !== id) return;
-                            switch (delta.state.current) {
-                                case "downloading":
-                                    break;
-                                case "complete":
-                                    browser.tabs.create({ url: "download-success.txt" });
-                                    browser.downloads.onChanged.removeListener(listener);
-                                    break;
-                                case "error":
-                                    browser.tabs.create({ url: "download-error.txt" });
-                                    browser.downloads.onChanged.removeListener(listener);
-                                    break;
-                            }
-                        };
-                        browser.downloads.onChanged.addListener(listener);
-                    },
-                    (error) => {
-                        console.log(`Download failed: ${error}`);
-                    }
-                );
-            }
+            console.log("navigating to:", mpvUrl);
         },
         (error) => {
             console.log("failed " + mpvUrl, error);
@@ -77,3 +47,82 @@ browser.menus.onClicked.addListener((info, tab) => {
 browser.action.onClicked.addListener((tab) => {
     ff2mpv(tab.url);
 });
+
+const filter = {
+    url: [
+        {
+            schemes: ["mpv", "mpvx"],
+        },
+        {
+            urlPrefix: browser.runtime.getURL("/"),
+        },
+    ],
+};
+
+/*
+chrome.webNavigation.onBeforeNavigate.addListener((details) => {
+    console.log("onBeforeNavigate");
+    console.log(details);
+}, filter);
+chrome.webNavigation.onCommitted.addListener((details) => {
+    console.log("onCommitted");
+    console.log(details);
+}, filter);
+chrome.webNavigation.onDOMContentLoaded.addListener((details) => {
+    console.log("onDOMContentLoaded");
+    console.log(details);
+}, filter);
+chrome.webNavigation.onCompleted.addListener((details) => {
+    console.log("onCompleted");
+    console.log(details);
+}, filter);
+chrome.webNavigation.onCreatedNavigationTarget.addListener((details) => {
+    console.log("onCreatedNavigationTarget");
+    console.log(details);
+}, filter);
+chrome.webNavigation.onHistoryStateUpdated.addListener((details) => {
+    console.log("onHistoryStateUpdated");
+    console.log(details);
+}, filter);
+chrome.webNavigation.onReferenceFragmentUpdated.addListener((details) => {
+    console.log("onReferenceFragmentUpdated");
+    console.log(details);
+}, filter);
+*/
+
+chrome.webNavigation.onErrorOccurred.addListener((details) => {
+    // Error code 2152398865 -> mpv
+    // Error code 2152398866 -> error
+
+    if (details.error.endsWith("2152398865")) {
+        console.log("opened in mpv");
+    } else {
+        console.log("onErrorOccurred");
+        console.log(details);
+
+        browser.downloads.download({ url: browser.runtime.getURL("mpv-scheme-handler.desktop.txt") }).then(
+            (id) => {
+                console.log(`Started downloading: ${id}`);
+                const listener = (delta) => {
+                    if (delta.id !== id) return;
+                    switch (delta.state.current) {
+                        case "downloading":
+                            break;
+                        case "complete":
+                            browser.tabs.create({ url: "download-success.txt" });
+                            browser.downloads.onChanged.removeListener(listener);
+                            break;
+                        case "error":
+                            browser.tabs.create({ url: "download-error.txt" });
+                            browser.downloads.onChanged.removeListener(listener);
+                            break;
+                    }
+                };
+                browser.downloads.onChanged.addListener(listener);
+            },
+            (error) => {
+                console.log(`Download failed: ${error}`);
+            }
+        );
+    }
+}, filter);
