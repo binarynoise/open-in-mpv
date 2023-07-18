@@ -1,11 +1,7 @@
 "use strict";
-let browser;
-
-let isChrome = false; // TODO
-
-if (browser === undefined) {
-    browser = chrome;
-}
+var browser, chrome;
+const isChrome = !browser;
+browser = browser || chrome;
 
 function ff2mpv(url) {
     const mpvUrl = `mpv://${url}`;
