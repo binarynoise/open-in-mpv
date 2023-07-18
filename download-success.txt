@@ -1,1 +1,2 @@
 copy downloaded file to ~/.local/share/applications/mpv-scheme-handler.desktop and set it as default handler of mpv:// urls
+Remember to remove the .txt
