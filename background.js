@@ -45,8 +45,20 @@ function ff2mpv(url) {
 
 browser.menus.create({
     id: "ff2mpv",
-    title: "open in mpv", // TODO: translation
-    contexts: ["link", "image", "video", "audio", "selection", "frame"],
+    title: browser.i18n.getMessage("extensionName"),
+    contexts: [
+        "action",
+        "audio",
+        "frame",
+        // "image",
+        "link",
+        // "page_action",
+        // "page",
+        "selection",
+        "tab",
+        "tools_menu",
+        "video",
+    ],
 });
 
 browser.menus.onClicked.addListener((info, tab) => {
@@ -55,12 +67,13 @@ browser.menus.onClicked.addListener((info, tab) => {
             /* These should be mutually exclusive, but,
                if they aren't, this is a reasonable priority.
             */
-            const url = info.linkUrl || info.srcUrl || info.selectionText || info.frameUrl;
+            const url = info.linkUrl || info.srcUrl || info.selectionText || info.frameUrl || info.pageUrl;
             if (url) ff2mpv(url);
+            else console.log({ info: info, tab: tab });
             break;
     }
 });
 
-// browser.browserAction.onClicked.addListener((tab) => {
-//     ff2mpv(tab.url);
-// });
+browser.action.onClicked.addListener((tab) => {
+    ff2mpv(tab.url);
+});
