@@ -29,5 +29,11 @@
     "contextMenus",
     "activeTab",
     "webNavigation"
-  ]
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "open-in-mpv@binarynoise.de",
+      "strict_min_version": "101.0"
+    }
+  }
 }

@@ -1,0 +1,5 @@
+.idea
+.vscode
+web-ext-artifacts/
+*.zip
+.env
