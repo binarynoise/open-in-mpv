@@ -10,6 +10,10 @@ source .env
 
 set -e
 
-web-ext lint --output json --pretty >web-ext-artifacts/lint.json
+if ! web-ext lint --output json --pretty >web-ext-artifacts/lint.json; then
+    echo "web-ext lint failed"
+    exit 1
+fi
+
 web-ext build --overwrite-dest
 web-ext sign --no-input

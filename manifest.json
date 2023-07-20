@@ -2,7 +2,7 @@
   "name": "__MSG_extensionName__",
   "short_name": "__MSG_extensionShortName__",
   "description": "__MSG_extensionDescription__",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "manifest_version": 3,
   "default_locale": "en",
   "icons": {
@@ -33,7 +33,7 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "open-in-mpv@binarynoise.de",
-      "strict_min_version": "101.0"
+      "strict_min_version": "109.0"
     }
   }
 }
