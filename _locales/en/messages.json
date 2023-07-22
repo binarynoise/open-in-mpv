@@ -8,7 +8,7 @@
         "description": "The short_name (maximum of 12 characters recommended) is a short version of the extension's name."
     },
     "extensionDescription": {
-        "message": "Use the context menu or the button in the navigation bar to open a video in mpv.",
+        "message": "Use the context menu or the add-on button to open a video in mpv.",
         "description": "The description of the extension"
     }
 }

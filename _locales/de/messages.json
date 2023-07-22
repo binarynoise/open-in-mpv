@@ -1,0 +1,14 @@
+{
+    "extensionName": {
+        "message": "In mpv öffnen",
+        "description": "Der Name der Erweiterung"
+    },
+    "extensionShortName": {
+        "message": "open-in-mpv",
+        "description": "Der Kurzname (maximal 12 Zeichen empfohlen) ist eine verkürzte Version des Namens der Erweiterung."
+    },
+    "extensionDescription": {
+        "message": "Verwende das Kontextmenü oder die Add-On-Schaltfläche, um ein Video in mpv zu öffnen.",
+        "description": "Die Beschreibung der Erweiterung"
+    }
+}
