@@ -18,6 +18,10 @@ Licensed under the EUPL-1.2-or-later
 
 Go to !release pending! and install the extension
 
+### Discord
+
+Go to !release pending! and install the extension
+
 ## Local (development) installation
 
 ### Firefox
