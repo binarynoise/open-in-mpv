@@ -16,4 +16,4 @@ if ! web-ext lint --output json --pretty >web-ext-artifacts/lint.json; then
 fi
 
 web-ext build --overwrite-dest
-web-ext sign --no-input
+web-ext sign --no-input --channel listed
