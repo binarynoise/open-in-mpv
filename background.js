@@ -1,7 +1,11 @@
 "use strict";
+
+// noinspection ES6ConvertVarToLetConst; will set the variable undefined to undefined if already existing
 var browser, chrome;
 const isChrome = !browser;
 browser = browser || chrome;
+
+const menus = browser.menus || browser.contextMenus;
 
 function openInMpv(url) {
     const mpvUrl = `mpv://${url}`;
@@ -16,37 +20,37 @@ function openInMpv(url) {
     );
 }
 
-browser.contextMenus.create({
+menus.create({
     id: "openInMpv",
     title: browser.i18n.getMessage("extensionName"),
     contexts: isChrome
         ? [
-              // chrome: action, all, audio, browser_action, editable, frame, image, launcher, link, page, page_action, selection, video
-              "action",
-              "audio",
-              "browser_action",
-              "frame",
-              "image",
-              "link",
-              "page_action",
-              "selection",
-              "video",
-          ]
+            // chrome: action, all, audio, browser_action, editable, frame, image, launcher, link, page, page_action, selection, video
+            "action",
+            "audio",
+            "browser_action",
+            "frame",
+            "image",
+            "link",
+            "page_action",
+            "selection",
+            "video",
+        ]
         : [
-              // firefox: "all", "audio", "bookmark", "editable", "frame", "image", "launcher", "link", "page", "password", "selection", "tab", "tools_menu", "video"
-              "action",
-              "audio",
-              "frame",
-              "image",
-              "link",
-              "selection",
-              "tab",
-              "tools_menu",
-              "video",
-          ],
+            // firefox: "all", "audio", "bookmark", "editable", "frame", "image", "launcher", "link", "page", "password", "selection", "tab", "tools_menu", "video"
+            "action",
+            "audio",
+            "frame",
+            "image",
+            "link",
+            "selection",
+            "tab",
+            "tools_menu",
+            "video",
+        ],
 });
 
-browser.contextMenus.onClicked.addListener((info, tab) => {
+menus.onClicked.addListener((info, tab) => {
     switch (info.menuItemId) {
         case "openInMpv":
             const url = info.linkUrl || info.srcUrl || info.selectionText || info.frameUrl || info.pageUrl;
