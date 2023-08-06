@@ -36,6 +36,7 @@ const contextMenuPatch = (tree, context) => {
                                 cancelText: "Ok, don't show again",
                                 onCancel: () => {
                                     mySettings.showAgain = false;
+                                    BdApi.Data.save("open-in-mpv", "settings", mySettings);
                                 },
                             })
                         } else {
