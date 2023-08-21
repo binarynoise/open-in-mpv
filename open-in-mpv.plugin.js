@@ -6,7 +6,7 @@
  */
 
 
-const mySettings = { showAgain: true };
+const settings = { showAgain: true };
 
 const contextMenuPatch = (tree, context) => {
     const href = context.target.href || context.target.parentNode.href
@@ -26,7 +26,7 @@ const contextMenuPatch = (tree, context) => {
                     const electron = require('electron');
 
                     electron.shell.openExternal('mpv://' + href).then(() => {
-                        if (mySettings.showAgain !== false) {
+                        if (settings.showAgain !== false) {
                             BdApi.UI.showConfirmationModal("Open in mpv", "Successfully opened " + href + " in mpv. Did nothing happen? Download and run setup.sh", {
                                 confirmText: "Download setup.sh",
                                 onConfirm: () => {
@@ -35,8 +35,8 @@ const contextMenuPatch = (tree, context) => {
 
                                 cancelText: "Ok, don't show again",
                                 onCancel: () => {
-                                    mySettings.showAgain = false;
-                                    BdApi.Data.save("open-in-mpv", "settings", mySettings);
+                                    settings.showAgain = false;
+                                    BdApi.Data.save("open-in-mpv", "settings", settings);
                                 },
                             })
                         } else {
@@ -67,8 +67,8 @@ function buildSetting(text, key, type, value, callback = () => {
     }
     input.addEventListener("change", () => {
         const newValue = type === "checkbox" ? input.checked : input.value;
-        mySettings[key] = newValue;
-        BdApi.Data.save("open-in-mpv", "settings", mySettings);
+        settings[key] = newValue;
+        BdApi.Data.save("open-in-mpv", "settings", settings);
         callback(newValue);
     });
     setting.append(label, input);
@@ -76,10 +76,11 @@ function buildSetting(text, key, type, value, callback = () => {
 }
 
 // noinspection JSUnusedGlobalSymbols
-module.exports = (meta) => ({
+module.exports = () => ({
     start() {
         console.log("Open in mpv plugin enabled");
 
+        Object.assign(settings, BdApi.Data.load("open-in-mpv", "settings"));
         BdApi.ContextMenu.patch("message", contextMenuPatch);
     },
     stop() {
@@ -89,7 +90,7 @@ module.exports = (meta) => ({
         const mySettingsPanel = document.createElement("div", { className: "bd-addon-settings-wrap" });
         mySettingsPanel.id = "my-settings";
 
-        const showAgain = buildSetting("Show Dialog", "showAgain", "checkbox", mySettings.showAgain);
+        const showAgain = buildSetting("Show Dialog", "showAgain", "checkbox", settings.showAgain);
 
         mySettingsPanel.append(showAgain);
         return mySettingsPanel;
