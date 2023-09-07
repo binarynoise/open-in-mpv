@@ -1,7 +1,7 @@
 [Desktop Entry]
 Version=1.0
 Type=Application
-Exec=/bin/sh -c 'URL=$(echo "%u" | sed -E "s|^mpv://||") && mpv --keep-open --player-operation-mode=pseudo-gui "${URL}" || notify-send -i mpv -w -A "Close" -A "Open=Open" "Opening ${URL} failed" | sh -c "[ \"$(head -n1 -)\" = "Open" ] && xdg-open \"${URL}\""'
+Exec=/bin/sh -c 'URL=$(echo "%u" | sed -E "s|^mpv://||") && mpv --keep-open --player-operation-mode=pseudo-gui "${URL}" || notify-send -i mpv -w -A "Close" -A "Open=Open" "Opening ${URL} failed" | sh -c "[ \\"$(head -n1 -)\\" = "Open" ] && xdg-open \\"${URL}\\""'
 Icon=mpv
 StartupNotify=true
 Terminal=false
