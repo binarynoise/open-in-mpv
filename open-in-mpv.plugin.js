@@ -8,7 +8,7 @@
 
 const settings = { showAgain: true };
 
-const contextMenuPatch = (tree, context) => {
+function contextMenuPatch(tree, context) {
     const href = context.target.href || context.target.parentNode.href
     
     if (href !== undefined) {
@@ -48,7 +48,7 @@ const contextMenuPatch = (tree, context) => {
             },
         }))
     }
-};
+}
 
 document.createSvgElement = (name) => { return document.createElementNS("http://www.w3.org/2000/svg", name) };
 
