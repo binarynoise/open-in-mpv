@@ -54,24 +54,28 @@ const { React, React: { useState }, Webpack: { Filters, getModule } } = BdApi;
 
 const TheBigBoyBundle = getModule(Filters.byProps("openModal", "FormSwitch", "Anchor"));
 
-function Switch({ value, note, hideBorder, label, key }) {
+function Switch({ value, note, hideBorder, label }) {
     const [enabled, setEnabled] = useState(value);
     return (React.createElement(TheBigBoyBundle.FormSwitch, {
         value: enabled, note: note, hideBorder: hideBorder, onChange: e => {
             setEnabled(e);
             
-            console.log(e);
+            switch (label) {
+                case "Show Dialog":
+                    settings.showAgain = e;
+                    break;
+                default:
+                    break;
+            }
             
-            settings[key] = e;
             BdApi.Data.save("open-in-mpv", "settings", settings);
-            
         },
     }, label));
 }
 
 const SettingComponent = () => {
     return React.createElement(Switch, {
-        value: true, /*note: "this is a note",*/ hideBorder: true, onChange: console.log, label: "Show Dialog", key: "showAgain",
+        value: settings.showAgain, /*note: "this is a note",*/ hideBorder: true, onChange: console.log, label: "Show Dialog"
     });
 }
 
