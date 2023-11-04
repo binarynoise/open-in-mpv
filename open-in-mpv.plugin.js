@@ -5,6 +5,7 @@
  * @version 1.1.2
  */
 
+'use strict';
 
 const settings = { showAgain: true };
 
