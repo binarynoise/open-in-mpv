@@ -118,7 +118,6 @@ function buildCheckboxSetting(text, key, callback = () => {}) {
     return setting;
 }
 
-// noinspection JSUnusedGlobalSymbols
 module.exports = () => ({
     start() {
         const saved = BdApi.Data.load("open-in-mpv", "settings");
