@@ -50,41 +50,97 @@ const contextMenuPatch = (tree, context) => {
     }
 };
 
-function buildSetting(text, key, type, value, callback = () => {
-}) {
-    const setting = Object.assign(document.createElement("div"), { className: "setting" });
-    const label = Object.assign(document.createElement("span"), { textContent: text, className: "title-2yADjX" });
-    const input = Object.assign(document.createElement("input"), { type: type, name: key, value: value });
-    if (type === "checkbox") {
-        input.classList.add("bd-switch");
-        if (value) input.checked = true;
-    }
+document.createSvgElement = (name) => { return document.createElementNS("http://www.w3.org/2000/svg", name) };
+
+function buildCheckboxSetting(text, key, callback = () => {}) {
+    const setting = document.createElement("div");
+    setting.className = "flex_f5fbb7 vertical__1e37a justifyStart__42744 alignStretch_e239ef noWrap__5c413";
+    setting.style.flex = "1 1 auto";
+    
+    const rowWrapper = document.createElement("div");
+    rowWrapper.className = "flex_f5fbb7 horizontal__992f6 justifyStart__42744 alignStart__4fe1e noWrap__5c413";
+    rowWrapper.style.flex = "1 1 auto";
+    
+    const titleWrapper = document.createElement("div");
+    titleWrapper.className = "flexChild__6e093";
+    titleWrapper.style.flex = "1 1 auto";
+    
+    const title = document.createElement("div");
+    title.className = "title__28a65";
+    title.textContent = text;
+    
+    const switchWrapper = document.createElement("div");
+    switchWrapper.className = "bd-switch";
+    if (settings[key]) switchWrapper.classList.add("bd-switch-checked");
+    
+    const input = document.createElement("input");
+    input.type = "checkbox";
+    input.checked = settings[key];
+    
     input.addEventListener("change", () => {
-        const newValue = type === "checkbox" ? input.checked : input.value;
+        const newValue = input.checked;
+        if (newValue) switchWrapper.classList.add("bd-switch-checked"); else switchWrapper.classList.remove("bd-switch-checked");
         settings[key] = newValue;
         BdApi.Data.save("open-in-mpv", "settings", settings);
         callback(newValue);
     });
-    setting.append(label, input);
+    
+    const switchBody = document.createElement("div");
+    switchBody.className = "bd-switch-body";
+    
+    const switchSlider = document.createSvgElement("svg");
+    switchSlider.setAttribute("class", "bd-switch-slider");
+    switchSlider.setAttribute("viewBox", "0 0 28 20");
+    switchSlider.setAttribute("preserveAspectRatio", "xMinYMid meet");
+    
+    const handle = document.createSvgElement("rect");
+    handle.setAttribute("class", "bd-switch-handle");
+    handle.setAttribute("fill", "white");
+    handle.setAttribute("x", "4");
+    handle.setAttribute("y", "0");
+    handle.setAttribute("height", "20");
+    handle.setAttribute("width", "20");
+    handle.setAttribute("rx", "10");
+    
+    const symbol = document.createSvgElement("svg");
+    symbol.setAttribute("class", "bd-switch-symbol");
+    symbol.setAttribute("viewBox", "0 0 20 20");
+    symbol.setAttribute("fill", "none");
+    
+    symbol.append(document.createSvgElement("path"), document.createSvgElement("path"));
+    switchSlider.append(handle, symbol);
+    switchBody.append(switchSlider);
+    switchWrapper.append(input, switchBody);
+    titleWrapper.append(title);
+    rowWrapper.append(titleWrapper, switchWrapper);
+    setting.append(rowWrapper);
+    
     return setting;
 }
 
 // noinspection JSUnusedGlobalSymbols
 module.exports = () => ({
     start() {
-        console.log("Open in mpv plugin enabled");
-        
-        Object.assign(settings, BdApi.Data.load("open-in-mpv", "settings"));
+        const saved = BdApi.Data.load("open-in-mpv", "settings");
+        if (saved && !isEmpty(saved)) Object.assign(settings, saved);
         BdApi.ContextMenu.patch("message", contextMenuPatch);
     }, stop() {
         BdApi.ContextMenu.unpatch("message", contextMenuPatch);
     }, getSettingsPanel: () => {
-        const mySettingsPanel = document.createElement("div", { className: "bd-addon-settings-wrap" });
-        mySettingsPanel.id = "my-settings";
+        const mySettingsPanel = Object.assign(document.createElement("div"));
         
-        const showAgain = buildSetting("Show Dialog", "showAgain", "checkbox", settings.showAgain);
+        mySettingsPanel.append(buildCheckboxSetting("Show Dialog", "showAgain"));
         
-        mySettingsPanel.append(showAgain);
         return mySettingsPanel;
-    }
+    },
 });
+
+function isEmpty(obj) {
+    for (const prop in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+            return false;
+        }
+    }
+    
+    return true
+}
