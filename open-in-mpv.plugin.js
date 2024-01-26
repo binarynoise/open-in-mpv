@@ -9,6 +9,8 @@
 
 const settings = { showAgain: true };
 
+const MPVSchemePrefix = "mpv://watch#";
+
 function contextMenuPatch(tree, context) {
     const href = context.target.href || context.target.parentNode.href
 
@@ -21,7 +23,7 @@ function contextMenuPatch(tree, context) {
                 console.log("link is " + href);
                 const electron = require('electron');
 
-                electron.shell.openExternal('mpv://' + href).then(() => {
+                electron.shell.openExternal(MPVSchemePrefix + href).then(() => {
                     if (settings.showAgain !== false) {
                         BdApi.UI.showConfirmationModal("Open in mpv",
                             "Successfully opened " + href + " in mpv. Did nothing happen? Download and run setup.sh",
@@ -40,10 +42,10 @@ function contextMenuPatch(tree, context) {
                     }
                     console.log("success");
                 }, (error) => {
-                    console.log("failed to open mpv://" + href);
+                    console.log(`failed to open ${MPVSchemePrefix}href`);
                     console.log(error);
                 }).catch((error) => {
-                    console.log("failed to open mpv://" + href);
+                    console.log(`failed to open ${MPVSchemePrefix}href`);
                     console.log(error);
                 })
             },

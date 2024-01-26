@@ -8,7 +8,7 @@ browser = browser || chrome;
 const menus = browser.menus || browser.contextMenus;
 
 function openInMpv(url) {
-    const mpvUrl = `mpv://${url}`;
+    const mpvUrl = `mpv://watch#${url}`;
 
     browser.tabs.update({ url: mpvUrl }).then(() => {
         console.debug("navigating to:", mpvUrl);
