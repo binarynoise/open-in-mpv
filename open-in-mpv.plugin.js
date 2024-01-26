@@ -2,7 +2,7 @@
  * @name open in mpv
  * @author binarynoise
  * @description Use the context menu to open a video in mpv.
- * @version 1.1.3
+ * @version 2.0.0
  */
 
 'use strict';
