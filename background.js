@@ -9,7 +9,7 @@ const menus = browser.menus || browser.contextMenus;
 
 function openInMpv(url) {
     const mpvUrl = `mpv://${url}`;
-    
+
     browser.tabs.update({ url: mpvUrl }).then(() => {
         console.debug("navigating to:", mpvUrl);
     }, (error) => {
@@ -53,13 +53,13 @@ if (!isChrome) {
     browser.webNavigation.onErrorOccurred.addListener((details) => {
         // Error code 2152398865 -> kNoContent (mpv)
         // Error code 2152398866 -> kUnknownProtocol
-        
+
         if (details.error.endsWith("2152398865")) {
             console.debug("opened in mpv");
         } else {
             console.debug("onErrorOccurred");
             console.debug(details);
-            
+
             browser.tabs.create({ url: "setup.sh" });
         }
     }, filter);

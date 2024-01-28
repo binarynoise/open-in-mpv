@@ -11,7 +11,7 @@ const settings = { showAgain: true };
 
 function contextMenuPatch(tree, context) {
     const href = context.target.href || context.target.parentNode.href
-    
+
     if (href !== undefined) {
         tree.props.children.push(BdApi.ContextMenu.buildItem({
             type: "separator",
@@ -20,7 +20,7 @@ function contextMenuPatch(tree, context) {
             type: "text", label: "open in mpv", action: () => {
                 console.log("link is " + href);
                 const electron = require('electron');
-                
+
                 electron.shell.openExternal('mpv://' + href).then(() => {
                     if (settings.showAgain !== false) {
                         BdApi.UI.showConfirmationModal("Open in mpv",
@@ -29,7 +29,7 @@ function contextMenuPatch(tree, context) {
                                 confirmText: "Download setup.sh", onConfirm: () => {
                                     electron.shell.openExternal('https://raw.githubusercontent.com/binarynoise/open-in-mpv/main/setup.sh');
                                 },
-                                
+
                                 cancelText: "Ok, don't show again", onCancel: () => {
                                     settings.showAgain = false;
                                     BdApi.Data.save("open-in-mpv", "settings", settings);
@@ -60,7 +60,7 @@ function Switch({ value, note, hideBorder, label }) {
     return (React.createElement(TheBigBoyBundle.FormSwitch, {
         value: enabled, note: note, hideBorder: hideBorder, onChange: e => {
             setEnabled(e);
-            
+
             switch (label) {
                 case "Show Dialog":
                     settings.showAgain = e;
@@ -68,7 +68,7 @@ function Switch({ value, note, hideBorder, label }) {
                 default:
                     break;
             }
-            
+
             BdApi.Data.save("open-in-mpv", "settings", settings);
         },
     }, label));
@@ -96,6 +96,6 @@ function isEmpty(obj) {
             return false;
         }
     }
-    
+
     return true
 }
