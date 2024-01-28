@@ -1,5 +1,6 @@
 #!/bin/sh
-# one last thing to do: to use the extension, run the following commands in your terminal:
+# When the addon is installed or updated, there is one last thing to do.
+# To use the extension, run the following commands in your terminal:
 
 set -e
 
@@ -10,3 +11,5 @@ else
 fi
 
 xdg-mime default mpv-scheme-handler.desktop x-scheme-handler/mpv
+
+set +e

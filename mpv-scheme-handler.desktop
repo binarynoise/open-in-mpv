@@ -11,3 +11,5 @@ Comment=Launch MPV
 Hidden=false
 
 # copy to ~/.local/share/applications/mpv-scheme-handler.desktop
+# Version 2
+# update this version in background.js and open-in-mpv.plugin.js

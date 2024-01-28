@@ -28,6 +28,7 @@
     "permissions": [
         "menus",
         "activeTab",
+        "storage",
         "webNavigation"
     ],
     "browser_specific_settings": {
