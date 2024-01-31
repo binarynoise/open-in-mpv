@@ -1,20 +1,43 @@
 "use strict";
 
-// noinspection ES6ConvertVarToLetConst; will set the variable undefined to undefined if already existing
+// change this when mpv-scheme-handler.desktop changes
+const desktopFileVersion = 2;
+let locallyInstalledVersion = null;
+
+// noinspection ES6ConvertVarToLetConst; will set the variable undefined to undefined if not already existing
 var browser, chrome;
 const isChrome = !browser;
 browser = browser || chrome;
 
 const menus = browser.menus || browser.contextMenus;
 
-function openInMpv(url) {
+async function openInMpv(url) {
     const mpvUrl = `mpv://watch#${url}`;
 
-    browser.tabs.update({ url: mpvUrl }).then(() => {
-        console.debug("navigating to:", mpvUrl);
-    }, (error) => {
-        console.debug("failed " + mpvUrl, error);
-    });
+    const alreadySavedDesktop = await localDesktopFileVersionIsCurrent();
+    if (alreadySavedDesktop) {
+        await browser.tabs.update({ url: mpvUrl }).then(() => {
+            console.debug("navigating to:", mpvUrl);
+        }, (error) => {
+            console.debug("failed " + mpvUrl, error);
+        });
+    } else {
+        await askToInstall();
+        await saveCurrentDesktopFileVersion();
+    }
+}
+
+async function localDesktopFileVersionIsCurrent() {
+    const key = Object.keys({ desktopFileVersion })[0];
+    const savedVersion = locallyInstalledVersion === null ? (await browser.storage.local.get(key))[key] : locallyInstalledVersion;
+    console.debug({ savedVersion, deskCache: locallyInstalledVersion, key });
+    locallyInstalledVersion = savedVersion;
+    return savedVersion === desktopFileVersion;
+}
+
+async function saveCurrentDesktopFileVersion() {
+    locallyInstalledVersion = desktopFileVersion;
+    return await browser.storage.local.set({ desktopFileVersion });
 }
 
 menus.create({
@@ -31,14 +54,18 @@ menus.onClicked.addListener((info, tab) => {
     switch (info.menuItemId) {
         case "openInMpv":
             const url = info.linkUrl || info.srcUrl || info.selectionText || info.frameUrl || info.pageUrl;
-            if (url) openInMpv(url); else console.debug({ info: info, tab: tab });
+            if (url) return openInMpv(url); else console.debug({ info: info, tab: tab });
             break;
     }
 });
 
 browser.action.onClicked.addListener((tab) => {
-    openInMpv(tab.url);
+    return openInMpv(tab.url);
 });
+
+function askToInstall() {
+    return browser.tabs.create({ url: "setup.sh" });
+}
 
 const filter = {
     url: [{
@@ -60,7 +87,7 @@ if (!isChrome) {
             console.debug("onErrorOccurred");
             console.debug(details);
 
-            browser.tabs.create({ url: "setup.sh" });
+            askToInstall();
         }
     }, filter);
 }

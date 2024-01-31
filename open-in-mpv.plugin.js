@@ -2,12 +2,18 @@
  * @name open in mpv
  * @author binarynoise
  * @description Use the context menu to open a video in mpv.
- * @version 2.0.0
+ * @version 2.1.0
  */
 
 'use strict';
+const electron = require('electron');
 
-const settings = { showAgain: true };
+// change this when mpv-scheme-handler.desktop changes
+const desktopFileVersion = 2;
+
+const settings = {
+    locallyInstalledVersion: null
+};
 
 const MPVSchemePrefix = "mpv://watch#";
 
@@ -21,33 +27,30 @@ function contextMenuPatch(tree, context) {
         tree.props.children.push(BdApi.ContextMenu.buildItem({
             type: "text", label: "open in mpv", action: () => {
                 console.log("link is " + href);
-                const electron = require('electron');
 
-                electron.shell.openExternal(MPVSchemePrefix + href).then(() => {
-                    if (settings.showAgain !== false) {
-                        BdApi.UI.showConfirmationModal("Open in mpv",
-                            "Successfully opened " + href + " in mpv. Did nothing happen? Download and run setup.sh",
-                            {
-                                confirmText: "Download setup.sh", onConfirm: () => {
-                                    electron.shell.openExternal('https://raw.githubusercontent.com/binarynoise/open-in-mpv/main/setup.sh');
-                                },
+                if (settings.locallyInstalledVersion && settings.locallyInstalledVersion >= desktopFileVersion) {
 
-                                cancelText: "Ok, don't show again", onCancel: () => {
-                                    settings.showAgain = false;
-                                    BdApi.Data.save("open-in-mpv", "settings", settings);
-                                },
-                            })
-                    } else {
+                    electron.shell.openExternal(MPVSchemePrefix + href).then(() => {
                         BdApi.UI.showToast("" + href + " opened in mpv.", { type: "success" });
-                    }
-                    console.log("success");
-                }, (error) => {
-                    console.log(`failed to open ${MPVSchemePrefix}href`);
-                    console.log(error);
-                }).catch((error) => {
-                    console.log(`failed to open ${MPVSchemePrefix}href`);
-                    console.log(error);
-                })
+                        console.log("success");
+                    }, (error) => {
+                        console.log(`failed to open ${MPVSchemePrefix}href`);
+                        console.log(error);
+                    }).catch((error) => {
+                        console.log(`failed to open ${MPVSchemePrefix}href`);
+                        console.log(error);
+                    })
+                } else {
+                    BdApi.UI.showConfirmationModal("Open in mpv",
+                        "Open in mpv was updated or freshly installed. Please download and run setup.sh (again).",
+                        {
+                            confirmText: "Download setup.sh", onConfirm: () => {
+                                electron.shell.openExternal("https://raw.githubusercontent.com/binarynoise/open-in-mpv/main/setup.sh");
+                                settings.locallyInstalledVersion = desktopFileVersion;
+                                BdApi.Data.save("open-in-mpv", "settings", settings);
+                            },
+                        })
+                }
             },
         }))
     }
@@ -89,7 +92,7 @@ module.exports = () => ({
         BdApi.ContextMenu.patch("message", contextMenuPatch);
     }, stop() {
         BdApi.ContextMenu.unpatch("message", contextMenuPatch);
-    }, getSettingsPanel: () => React.createElement(SettingComponent),
+    }, //getSettingsPanel: () => React.createElement(SettingComponent),
 });
 
 function isEmpty(obj) {
