@@ -2,11 +2,10 @@
  * @name open in mpv
  * @author binarynoise
  * @description Use the context menu to open a video in mpv.
- * @version 2.1.0
+ * @version 2.1.1
  */
 
 'use strict';
-const electron = require('electron');
 
 // change this when mpv-scheme-handler.desktop changes
 const desktopFileVersion = 2;
@@ -26,33 +25,38 @@ function contextMenuPatch(tree, context) {
         }))
         tree.props.children.push(BdApi.ContextMenu.buildItem({
             type: "text", label: "open in mpv", action: () => {
-                console.log("link is " + href);
+                console.log("open-in-mpv: link is " + href);
 
                 if (settings.locallyInstalledVersion && settings.locallyInstalledVersion >= desktopFileVersion) {
+                    const newWindow = window.open(MPVSchemePrefix + href, "_blank", "noopener noreferrer");
 
-                    electron.shell.openExternal(MPVSchemePrefix + href).then(() => {
+                    if (newWindow === null) { // is null because opens in external application
                         BdApi.UI.showToast("" + href + " opened in mpv.", { type: "success" });
-                        console.log("success");
-                    }, (error) => {
-                        console.log(`failed to open ${MPVSchemePrefix}href`);
-                        console.log(error);
-                    }).catch((error) => {
-                        console.log(`failed to open ${MPVSchemePrefix}href`);
-                        console.log(error);
-                    })
+                        console.log("open-in-mpv: success");
+                    } else {
+                        BdApi.UI.showToast("" + href + " failed to open in mpv.", { type: "error" });
+                        console.log(`open-in-mpv: failed to open ${MPVSchemePrefix}${href} in mpv.`);
+                    }
                 } else {
                     BdApi.UI.showConfirmationModal("Open in mpv",
                         "Open in mpv was updated or freshly installed. Please download and run setup.sh (again).",
                         {
                             confirmText: "Download setup.sh", onConfirm: () => {
-                                electron.shell.openExternal("https://raw.githubusercontent.com/binarynoise/open-in-mpv/main/setup.sh");
-                                settings.locallyInstalledVersion = desktopFileVersion;
-                                BdApi.Data.save("open-in-mpv", "settings", settings);
+                                downloadSetup();
                             },
-                        })
+                        }
+                    )
                 }
             },
         }))
+    }
+}
+
+function downloadSetup() {
+    const newWindow = window.open("https://raw.githubusercontent.com/binarynoise/open-in-mpv/main/setup.sh", "_blank", "noopener noreferrer",);
+    if (newWindow === null) { // is null because opens in external browser
+        settings.locallyInstalledVersion = desktopFileVersion;
+        BdApi.Data.save("open-in-mpv", "settings", settings);
     }
 }
 
