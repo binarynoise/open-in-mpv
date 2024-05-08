@@ -11,8 +11,12 @@ browser = browser || chrome;
 
 const menus = browser.menus || browser.contextMenus;
 
+function createMpvSchemeURI(url) {
+    return `mpv://watch#${url.replace(/'/g, "%27")}`;
+}
+
 async function openInMpv(url) {
-    const mpvUrl = `mpv://watch#${url}`;
+    const mpvUrl = createMpvSchemeURI(url);
 
     const alreadySavedDesktop = await localDesktopFileVersionIsCurrent();
     if (alreadySavedDesktop) {

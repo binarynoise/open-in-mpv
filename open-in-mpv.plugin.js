@@ -14,7 +14,9 @@ const settings = {
     locallyInstalledVersion: null
 };
 
-const MPVSchemePrefix = "mpv://watch#";
+function createMpvSchemeURI(url) {
+    return `mpv://watch#${url.replace(/'/g, "%27")}`;
+}
 
 function contextMenuPatch(tree, context) {
     const href = context.target.href || context.target.parentNode.href
@@ -28,14 +30,14 @@ function contextMenuPatch(tree, context) {
                 console.log("open-in-mpv: link is " + href);
 
                 if (settings.locallyInstalledVersion && settings.locallyInstalledVersion >= desktopFileVersion) {
-                    const newWindow = window.open(MPVSchemePrefix + href, "_blank", "noopener noreferrer");
+                    const newWindow = window.open(createMpvSchemeURI(href), "_blank", "noopener noreferrer");
 
                     if (newWindow === null) { // is null because opens in external application
                         BdApi.UI.showToast("" + href + " opened in mpv.", { type: "success" });
                         console.log("open-in-mpv: success");
                     } else {
                         BdApi.UI.showToast("" + href + " failed to open in mpv.", { type: "error" });
-                        console.log(`open-in-mpv: failed to open ${MPVSchemePrefix}${href} in mpv.`);
+                        console.log(`open-in-mpv: failed to open ${createMpvSchemeURI(href)} in mpv.`);
                     }
                 } else {
                     BdApi.UI.showConfirmationModal("Open in mpv",
