@@ -12,7 +12,10 @@ browser = browser || chrome;
 const menus = browser.menus || browser.contextMenus;
 
 function createMpvSchemeURI(url) {
-    return `mpv://watch#${url.replace(/'/g, "%27")}`;
+    const decodedURL = decodeURI(url);
+    const encodedURL = encodeURI(decodedURL).replace(/'/g, "%27");
+    console.debug({url, encodedURL, same: decodedURL === decodeURI(encodedURL)});
+    return `mpv://watch#${encodedURL}`;
 }
 
 async function openInMpv(url) {
