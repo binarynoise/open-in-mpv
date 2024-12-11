@@ -8,7 +8,7 @@ Terminal=false
 MimeType=x-scheme-handler/mpv
 Name=MPV Launcher
 Comment=Launch MPV
-Hidden=false
+Hidden=true
 
 # copy to ~/.local/share/applications/mpv-scheme-handler.desktop
 # Version 2
