@@ -3,6 +3,8 @@
  * @author binarynoise
  * @description Use the context menu to open a video in mpv.
  * @version 2.1.1
+ * @source https://github.com/binarynoise/open-in-mpv
+ * @donate https://paypal.me/binarynoise
  */
 
 'use strict';
