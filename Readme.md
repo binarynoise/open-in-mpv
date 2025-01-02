@@ -16,7 +16,7 @@ Inspired by _Open In mpv_ by Leonardo and _ff2mpv_ by yossarian, which require a
 
 ### Firefox
 
-[![badge](https://extensionworkshop.com/assets/img/documentation/publish/get-the-addon-178x60px.dad84b42.png)][moz]
+[![badge](.github/firefox.png)][moz]
 
 Go to the add-on store and install the extension ["minimalist open in mpv"][moz]
 
@@ -27,6 +27,8 @@ Go to the add-on store and install the extension ["minimalist open in mpv"][moz]
 [//]: # (https://extensionworkshop.com/documentation/publish/promoting-your-extension/)
 
 ### Discord
+
+[![badge](.github/bd.png)][bd]
 
 Go to the BetterDiscord plugin repository and download the extension ["open in mpv"][bd] and put it into your plugins folder.
 
