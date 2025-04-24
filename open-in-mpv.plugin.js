@@ -2,7 +2,7 @@
  * @name open in mpv
  * @author binarynoise
  * @description Use the context menu to open a video in mpv.
- * @version 2.1.1
+ * @version 2.2.0
  * @source https://github.com/binarynoise/open-in-mpv
  * @donate https://paypal.me/binarynoise
  */
@@ -27,10 +27,10 @@ function contextMenuPatch(tree, context) {
     const href = context.target.href || context.target.parentNode.href
 
     if (href !== undefined) {
-        tree.props.children.push(BdApi.ContextMenu.buildItem({
+        tree.props.children.props.children.push(BdApi.ContextMenu.buildItem({
             type: "separator",
         }))
-        tree.props.children.push(BdApi.ContextMenu.buildItem({
+        tree.props.children.props.children.push(BdApi.ContextMenu.buildItem({
             type: "text", label: "open in mpv", action: () => {
                 console.log("open-in-mpv: link is " + href);
 
