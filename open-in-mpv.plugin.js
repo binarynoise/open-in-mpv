@@ -2,7 +2,7 @@
  * @name open in mpv
  * @author binarynoise
  * @description Use the context menu to open a video in mpv.
- * @version 2.2.0
+ * @version 2.2.1
  * @source https://github.com/binarynoise/open-in-mpv
  * @donate https://paypal.me/binarynoise
  */
@@ -65,35 +65,6 @@ function downloadSetup() {
         settings.locallyInstalledVersion = desktopFileVersion;
         BdApi.Data.save("open-in-mpv", "settings", settings);
     }
-}
-
-const { React, React: { useState }, Webpack: { Filters, getModule } } = BdApi;
-
-const TheBigBoyBundle = getModule(Filters.byProps("openModal", "FormSwitch", "Anchor"));
-
-function Switch({ value, note, hideBorder, label }) {
-    const [enabled, setEnabled] = useState(value);
-    return (React.createElement(TheBigBoyBundle.FormSwitch, {
-        value: enabled, note: note, hideBorder: hideBorder, onChange: e => {
-            setEnabled(e);
-
-            switch (label) {
-                case "Show Dialog":
-                    settings.showAgain = e;
-                    break;
-                default:
-                    break;
-            }
-
-            BdApi.Data.save("open-in-mpv", "settings", settings);
-        },
-    }, label));
-}
-
-const SettingComponent = () => {
-    return React.createElement(Switch, {
-        value: settings.showAgain, /*note: "this is a note",*/ hideBorder: true, onChange: console.log, label: "Show Dialog"
-    });
 }
 
 module.exports = () => ({
