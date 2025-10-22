@@ -1,7 +1,7 @@
 [Desktop Entry]
 Version=1.0
 Type=Application
-Exec=sh -c 'URL="%u"; URL=${URL#mpv://watch#}; mpv --keep-open --player-operation-mode=pseudo-gui "${URL}" || notify-send -i mpv -w -A Close -A Open=Open "Opening ${URL} failed" | { [ "$(head -n1)" = "Open" ] && xdg-open "${URL}";}'
+Exec=sh -c 'URL="%u"; URL=${URL#mpv://watch#}; mpv --keep-open --player-operation-mode=pseudo-gui "${URL}" || notify-send -i mpv -t 5000 -A Close -A Open=Open "Opening ${URL} failed" | { [ "$(head -n1)" = "Open" ] && xdg-open "${URL}";}'
 Icon=mpv
 StartupNotify=true
 Terminal=false
@@ -11,5 +11,5 @@ Comment=Launch MPV
 Hidden=true
 
 # copy to ~/.local/share/applications/mpv-scheme-handler.desktop
-# Version 2
+# Version 3
 # update this version in background.js and open-in-mpv.plugin.js

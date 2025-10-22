@@ -2,7 +2,7 @@
  * @name open in mpv
  * @author binarynoise
  * @description Use the context menu to open a video in mpv.
- * @version 2.2.1
+ * @version 2.3.0
  * @source https://github.com/binarynoise/open-in-mpv
  * @donate https://paypal.me/binarynoise
  */
@@ -10,7 +10,7 @@
 'use strict';
 
 // change this when mpv-scheme-handler.desktop changes
-const desktopFileVersion = 2;
+const desktopFileVersion = 3;
 
 const settings = {
     locallyInstalledVersion: null

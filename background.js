@@ -1,7 +1,7 @@
 "use strict";
 
 // change this when mpv-scheme-handler.desktop changes
-const desktopFileVersion = 2;
+const desktopFileVersion = 3;
 let locallyInstalledVersion = null;
 
 // noinspection ES6ConvertVarToLetConst; will set the variable undefined to undefined if not already existing
